@@ -55,6 +55,8 @@ def __decision_plot_matplotlib(
     xlabel_fontsize,
     xticks_fontsize,
     cbar_fontsize,
+    hide_top_label,
+    hide_bot_label
 ):
     """Matplotlib rendering for decision_plot()"""
     # image size
@@ -128,7 +130,12 @@ def __decision_plot_matplotlib(
                     t.set_horizontalalignment("left")
 
     # style axes
-    ax.xaxis.set_ticks_position("both")
+    if hide_top_label:
+        ax.xaxis.set_ticks_position("bottom")
+    elif hide_bot_label:
+        ax.xaxis.set_ticks_position("top")
+    else:
+        ax.xaxis.set_ticks_position("both")
     ax.yaxis.set_ticks_position("none")
     ax.spines["right"].set_visible(False)
     ax.spines["left"].set_visible(False)
@@ -136,7 +143,9 @@ def __decision_plot_matplotlib(
     pl.yticks(np.arange(feature_display_count) + 0.5, feature_names, fontsize=fontsize)
     ax.tick_params("x", labelsize=xticks_fontsize)
     pl.ylim(0, feature_display_count)
-    pl.xlabel(labels["MODEL_OUTPUT"], fontsize=xlabel_fontsize)
+
+    if not hide_bot_label:
+        pl.xlabel(labels["MODEL_OUTPUT"], fontsize=xlabel_fontsize)
 
     # draw the color bar - must come after axes styling
     if color_bar:
@@ -240,6 +249,8 @@ def decision(
     xlabel_fontsize = 22,
     xticks_fontsize = 20,
     cbar_fontsize = 16,
+    hide_top_label = False,
+    hide_bot_label = False,
 ) -> DecisionPlotResult | None:
     """Visualize model decisions using cumulative SHAP values.
 
@@ -569,10 +580,12 @@ def decision(
         show,
         legend_labels,
         legend_location,
-        feat_fontsize = 24,
-        xlabel_fontsize = 22,
-        xticks_fontsize = 20,
-        cbar_fontsize = 16
+        feat_fontsize,
+        xlabel_fontsize,
+        xticks_fontsize,
+        cbar_fontsize,
+        hide_top_label,
+        hide_bot_label
     )
 
     if not return_objects:
