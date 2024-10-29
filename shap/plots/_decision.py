@@ -51,6 +51,10 @@ def __decision_plot_matplotlib(
     show,
     legend_labels,
     legend_location,
+    feat_fontsize,
+    xlabel_fontsize,
+    xticks_fontsize,
+    cbar_fontsize,
 ):
     """Matplotlib rendering for decision_plot()"""
     # image size
@@ -90,7 +94,7 @@ def __decision_plot_matplotlib(
     # font. we don't shrink the font for all interaction plots because if an interaction term is not
     # in the display window there is no need to shrink the font.
     s = next((s for s in feature_names if " *\n" in s), None)
-    fontsize = 13 if s is None else 9
+    fontsize = feat_fontsize if s is None else feat_fontsize+4
 
     # if there is a single observation and feature values are supplied, print them.
     if (cumsum.shape[0] == 1) and (features is not None):
@@ -130,9 +134,9 @@ def __decision_plot_matplotlib(
     ax.spines["left"].set_visible(False)
     ax.tick_params(color=axis_color, labelcolor=axis_color, labeltop=True)
     pl.yticks(np.arange(feature_display_count) + 0.5, feature_names, fontsize=fontsize)
-    ax.tick_params("x", labelsize=11)
+    ax.tick_params("x", labelsize=xticks_fontsize)
     pl.ylim(0, feature_display_count)
-    pl.xlabel(labels["MODEL_OUTPUT"], fontsize=13)
+    pl.xlabel(labels["MODEL_OUTPUT"], fontsize=xlabel_fontsize)
 
     # draw the color bar - must come after axes styling
     if color_bar:
@@ -144,7 +148,7 @@ def __decision_plot_matplotlib(
         ax_cb = ax.inset_axes((xlim[0], feature_display_count, xlim[1] - xlim[0], 0.25), transform=ax.transData)
         cb = pl.colorbar(m, ticks=[0, 1], orientation="horizontal", cax=ax_cb)
         cb.set_ticklabels([])
-        cb.ax.tick_params(labelsize=11, length=0)
+        cb.ax.tick_params(labelsize=cbar_fontsize, length=0)
         cb.set_alpha(alpha)
         cb.outline.set_visible(False)  # type: ignore
 
@@ -232,6 +236,10 @@ def decision(
     new_base_value=None,
     legend_labels=None,
     legend_location="best",
+    feat_fontsize = 24,
+    xlabel_fontsize = 22,
+    xticks_fontsize = 20,
+    cbar_fontsize = 16,
 ) -> DecisionPlotResult | None:
     """Visualize model decisions using cumulative SHAP values.
 
@@ -561,6 +569,10 @@ def decision(
         show,
         legend_labels,
         legend_location,
+        feat_fontsize = 24,
+        xlabel_fontsize = 22,
+        xticks_fontsize = 20,
+        cbar_fontsize = 16
     )
 
     if not return_objects:

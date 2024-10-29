@@ -45,6 +45,8 @@ def beeswarm(
     plot_size: Literal["auto"] | float | tuple[float, float] | None = "auto",
     color_bar_label: str = labels["FEATURE_VALUE"],
     group_remaining_features: bool = True,
+    feat_fontsize=24, xlabel_fontsize=22, xticks_fontsize=20, cbar_fontsize=16, 
+    hide_features=False, hide_xaxis=False,
 ):
     """Create a SHAP beeswarm plot, colored by feature values when they are provided.
 
@@ -470,8 +472,8 @@ def beeswarm(
         m.set_array([0, 1])
         cb = fig.colorbar(m, ax=ax, ticks=[0, 1], aspect=80)
         cb.set_ticklabels([labels["FEATURE_VALUE_LOW"], labels["FEATURE_VALUE_HIGH"]])
-        cb.set_label(color_bar_label, size=12, labelpad=0)
-        cb.ax.tick_params(labelsize=11, length=0)
+        cb.set_label(color_bar_label, size=cbar_fontsize+1, labelpad=0)
+        cb.ax.tick_params(labelsize=cbar_fontsize, length=0)
         cb.set_alpha(1)
         cb.outline.set_visible(False)  # type: ignore
     #         bbox = cb.ax.get_window_extent().transformed(pl.gcf().dpi_scale_trans.inverted())
@@ -484,11 +486,19 @@ def beeswarm(
     ax.spines["top"].set_visible(False)
     ax.spines["left"].set_visible(False)
     ax.tick_params(color=axis_color, labelcolor=axis_color)
-    ax.set_yticks(range(len(feature_inds)), list(reversed(yticklabels)), fontsize=13)
-    ax.tick_params("y", length=20, width=0.5, which="major")
-    ax.tick_params("x", labelsize=11)
+    
+    if hide_features:
+        ax.yaxis.set_visible(False)
+    else:
+        ax.set_yticks(range(len(feature_inds)), reversed(yticklabels), fontsize=feat_fontsize)
+    if hide_xaxis:
+        ax.xaxis.set_visible(False)
+    else:
+        ax.tick_params('y', length=20, width=0.5, which='major')
+        ax.tick_params('x', labelsize=xticks_fontsize)
+        ax.set_xlabel(labels['VALUE'], fontsize=xlabel_fontsize)
+        
     ax.set_ylim(-1, len(feature_inds))
-    ax.set_xlabel(labels["VALUE"], fontsize=13)
     if show:
         pl.show()
     else:
