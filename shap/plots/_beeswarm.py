@@ -480,22 +480,24 @@ def beeswarm(
     #         cb.ax.set_aspect((bbox.height - 0.9) * 20)
     # cb.draw_all()
 
+    #TODO clean up ax.tickparams throughout
     ax.xaxis.set_ticks_position("bottom")
     ax.yaxis.set_ticks_position("none")
     ax.spines["right"].set_visible(False)
     ax.spines["top"].set_visible(False)
     ax.spines["left"].set_visible(False)
     ax.tick_params(color=axis_color, labelcolor=axis_color)
+    ax.tick_params(axis='both', which='both', direction='in', width=3,length=8)
     
     if hide_features:
         ax.yaxis.set_visible(False)
     else:
         ax.set_yticks(range(len(feature_inds)), reversed(yticklabels), fontsize=feat_fontsize)
     if hide_xaxis:
-        ax.xaxis.set_visible(False)
+        ax.tick_params(axis='x', which='both', labelbottom=False, direction='in', width=3,length=8)
     else:
         ax.tick_params('y', length=20, width=0.5, which='major')
-        ax.tick_params('x', labelsize=xticks_fontsize)
+        ax.tick_params('x', labelsize=xticks_fontsize, direction='in', width=3,length=8)
         ax.set_xlabel(labels['VALUE'], fontsize=xlabel_fontsize)
         
     ax.set_ylim(-1, len(feature_inds))

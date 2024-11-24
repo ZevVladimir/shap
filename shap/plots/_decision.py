@@ -130,18 +130,21 @@ def __decision_plot_matplotlib(
                     t.set_horizontalalignment("left")
 
     # style axes
+    ax.xaxis.set_ticks_position("both")
+    #TODO clean up ax.tickparams throughout
     if hide_top_label:
-        ax.xaxis.set_ticks_position("bottom")
+        ax.tick_params(axis='x', which='both', labeltop=False, direction='in', width=3,length=8)
     elif hide_bot_label:
-        ax.xaxis.set_ticks_position("top")
-    else:
-        ax.xaxis.set_ticks_position("both")
+        ax.tick_params(axis='x', which='both', labelbottom=False, direction='in', width=3,length=8)
+    elif hide_top_label and hide_bot_label:
+        ax.tick_params(axis='x', which='both', labeltop=False, labelbottom=False, direction='in', width=3,length=8)
+
     ax.yaxis.set_ticks_position("none")
     ax.spines["right"].set_visible(False)
     ax.spines["left"].set_visible(False)
     ax.tick_params(color=axis_color, labelcolor=axis_color, labeltop=True)
     pl.yticks(np.arange(feature_display_count) + 0.5, feature_names, fontsize=fontsize)
-    ax.tick_params("x", labelsize=xticks_fontsize)
+    ax.tick_params("x", labelsize=xticks_fontsize, direction='in',width=3,length=8)
     pl.ylim(0, feature_display_count)
 
     if not hide_bot_label:
